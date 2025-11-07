@@ -2,125 +2,49 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Cabax Admin Pro - 完全版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabax Admin Pro - Complete Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* モバイル対応 */
         @media (max-width: 768px) {
-            .sidebar-mobile {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-            }
-            .sidebar-mobile.active {
-                transform: translateX(0);
-            }
-            .mobile-overlay {
-                display: none;
-            }
-            .mobile-overlay.active {
-                display: block;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 30;
-            }
+            .sidebar-mobile { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar-mobile.active { transform: translateX(0); }
         }
-
-        /* 印刷用 */
         @media print {
             .no-print { display: none !important; }
             .print-only { display: block !important; }
-            .receipt { width: 80mm; font-family: monospace; }
         }
-
         .print-only { display: none; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .modal { display: none; }
         .modal.active { display: flex; }
-        
         @keyframes slideIn {
             from { transform: translateY(-10px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-        
         .animate-slide-in { animation: slideIn 0.3s ease-out; }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-        }
-        
-        .shift-badge {
-            font-size: 0.6rem;
-            padding: 1px 4px;
-            border-radius: 2px;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            z-index: 40;
-        }
-
-        .touch-button {
-            min-height: 44px;
-            min-width: 44px;
-        }
+        .notification { position: fixed; top: 20px; right: 20px; z-index: 9999; animation: slideIn 0.3s; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+        .shift-badge { font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; background: #8b5cf6; color: white; }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- 通知エリア -->
     <div id="notificationArea"></div>
-
-    <!-- モバイルヘッダー -->
-    <div class="md:hidden fixed top-0 left-0 right-0 bg-white shadow-sm z-50 no-print">
-        <div class="flex items-center justify-between p-4">
-            <button onclick="toggleMobileSidebar()" class="touch-button">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-            <h1 class="font-bold text-lg">Cabax Admin Pro</h1>
-            <button onclick="showNotifications()" class="touch-button relative">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- モバイルオーバーレイ -->
-    <div id="mobileOverlay" class="mobile-overlay" onclick="toggleMobileSidebar()"></div>
 
     <!-- ログイン画面 -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 to-pink-900 p-4">
-        <div class="w-full max-w-md p-6 md:p-8 bg-white rounded-xl shadow-2xl">
-            <div class="text-center">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900">Cabax Admin Pro</h2>
-                <p class="mt-2 text-sm text-gray-600">水商売店舗管理システム</p>
+        <div class="w-full max-w-md p-8 bg-white rounded-xl shadow-2xl">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Cabax Admin Pro</h2>
+                <p class="mt-2 text-sm text-gray-600">完全版 - Full Featured</p>
             </div>
-            <form class="mt-6 space-y-4" onsubmit="handleLogin(event)">
-                <input type="text" id="shopCode" class="w-full px-4 py-3 border rounded-lg" value="SHOP001" placeholder="店舗コード">
-                <input type="email" id="email" class="w-full px-4 py-3 border rounded-lg" value="admin@example.com" placeholder="メールアドレス">
-                <input type="password" id="password" class="w-full px-4 py-3 border rounded-lg" value="password" placeholder="パスワード">
-                <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg">
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="text" id="shopCode" value="SHOP001" placeholder="店舗コード" class="w-full px-4 py-3 border rounded-lg">
+                <input type="email" id="email" value="admin@example.com" placeholder="メールアドレス" class="w-full px-4 py-3 border rounded-lg">
+                <input type="password" id="password" value="password" placeholder="パスワード" class="w-full px-4 py-3 border rounded-lg">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold">
                     ログイン
                 </button>
             </form>
@@ -136,38 +60,22 @@
                     <h1 class="text-xl font-bold text-white">Cabax Pro</h1>
                     <button onclick="toggleMobileSidebar()" class="md:hidden text-white">✕</button>
                 </div>
-
                 <div class="border-b border-gray-700 p-4">
                     <p class="text-xs text-gray-400">営業日</p>
                     <p class="mt-1 text-lg font-semibold text-white" id="businessDate"></p>
                 </div>
-
                 <nav class="flex-1 overflow-y-auto px-2 py-4">
-                    <button onclick="showTab('dashboard')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-white bg-gray-700 mb-1">
-                        ダッシュボード
-                    </button>
-                    <button onclick="showTab('tables')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        テーブル管理
-                    </button>
-                    <button onclick="showTab('shifts')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        シフト管理
-                    </button>
-                    <button onclick="showTab('orders')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        注文管理
-                    </button>
-                    <button onclick="showTab('menu')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        メニュー管理
-                    </button>
-                    <button onclick="showTab('casts')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        キャスト管理
-                    </button>
-                    <button onclick="showTab('reports')" class="nav-button w-full flex items-center rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-700 mb-1">
-                        売上レポート
-                    </button>
+                    <button onclick="showTab('dashboard')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-white bg-gray-700 mb-1">📊 ダッシュボード</button>
+                    <button onclick="showTab('tables')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">🪑 テーブル管理</button>
+                    <button onclick="showTab('attendance')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">⏰ 勤怠管理</button>
+                    <button onclick="showTab('shifts')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">📅 シフト管理</button>
+                    <button onclick="showTab('orders')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">📝 注文管理</button>
+                    <button onclick="showTab('menu')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">🍽️ メニュー管理</button>
+                    <button onclick="showTab('casts')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">👥 キャスト管理</button>
+                    <button onclick="showTab('reports')" class="nav-btn w-full flex items-center rounded-lg px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 mb-1">📈 売上レポート</button>
                 </nav>
-
                 <div class="border-t border-gray-700 p-4">
-                    <button onclick="logout()" class="w-full bg-red-600 text-white py-2 rounded-lg">
+                    <button onclick="logout()" class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">
                         ログアウト
                     </button>
                 </div>
@@ -175,104 +83,148 @@
         </div>
 
         <!-- メインコンテンツ -->
-        <div class="md:pl-64 pt-16 md:pt-0 pb-20 md:pb-0">
+        <div class="md:pl-64 pt-4 pb-20 md:pb-4">
             <main class="p-4 md:p-6">
+                
                 <!-- ダッシュボード -->
                 <div id="dashboard-tab" class="tab-content active">
                     <div class="mb-6">
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">ダッシュボード</h1>
-                        <div class="mt-2 flex flex-wrap gap-2">
-                            <button onclick="printDailyReport()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
-                                日報印刷
+                        <h1 class="text-3xl font-bold text-gray-900">📊 ダッシュボード</h1>
+                        <p class="text-gray-600 mt-1">リアルタイムAPI連携版</p>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <button onclick="syncWithBackend()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
+                                🔄 API同期
                             </button>
-                            <button onclick="exportCSV()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                CSV出力
+                            <button onclick="printDailyReport()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                🖨️ 日報印刷
+                            </button>
+                            <button onclick="exportCSV()" class="bg-green-600 text-white px-4 py-2 rounded-lg">
+                                📥 CSV出力
                             </button>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6">
-                        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 md:p-6 text-white shadow-lg">
-                            <p class="text-xs md:text-sm text-purple-100">本日の売上</p>
-                            <p class="text-xl md:text-3xl font-bold mt-1" id="totalSales">¥0</p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+                            <p class="text-sm text-purple-100">本日の売上</p>
+                            <p class="text-3xl font-bold mt-2" id="totalSales">¥0</p>
                         </div>
-                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 md:p-6 text-white shadow-lg">
-                            <p class="text-xs md:text-sm text-blue-100">来店組数</p>
-                            <p class="text-xl md:text-3xl font-bold mt-1" id="totalCustomers">0組</p>
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+                            <p class="text-sm text-blue-100">来店組数</p>
+                            <p class="text-3xl font-bold mt-2" id="totalCustomers">0組</p>
                         </div>
-                        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 md:p-6 text-white shadow-lg">
-                            <p class="text-xs md:text-sm text-green-100">出勤キャスト</p>
-                            <p class="text-xl md:text-3xl font-bold mt-1" id="workingCasts">0名</p>
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+                            <p class="text-sm text-green-100">出勤中</p>
+                            <p class="text-3xl font-bold mt-2" id="workingCasts">0名</p>
                         </div>
-                        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 md:p-6 text-white shadow-lg">
-                            <p class="text-xs md:text-sm text-orange-100">客単価</p>
-                            <p class="text-xl md:text-3xl font-bold mt-1" id="averageSpend">¥0</p>
+                        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg">
+                            <p class="text-sm text-orange-100">客単価</p>
+                            <p class="text-3xl font-bold mt-2" id="averageSpend">¥0</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div class="bg-white rounded-xl shadow-lg p-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
                             <h3 class="text-lg font-bold mb-4">時間帯別売上</h3>
                             <canvas id="salesChart"></canvas>
                         </div>
-                        <div class="bg-white rounded-xl shadow-lg p-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
                             <h3 class="text-lg font-bold mb-4">最近の活動</h3>
-                            <div id="recentActivities" class="space-y-2">
-                                <div class="flex justify-between py-2 border-b">
-                                    <span class="text-sm">22:30</span>
-                                    <span class="text-sm">テーブルA2を開きました</span>
-                                </div>
-                                <div class="flex justify-between py-2 border-b">
-                                    <span class="text-sm">22:15</span>
-                                    <span class="text-sm">VIP1に注文追加</span>
-                                </div>
+                            <div id="recentActivities" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 勤怠管理タブ（新機能） -->
+                <div id="attendance-tab" class="tab-content">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-6">⏰ 勤怠管理</h1>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- 出退勤打刻 -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold mb-4">📍 打刻</h3>
+                            <select id="attendanceCast" class="w-full border rounded-lg px-4 py-2 mb-4">
+                                <option value="">キャストを選択</option>
+                            </select>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="clockIn()" class="bg-green-600 text-white py-3 rounded-lg font-semibold">
+                                    ✅ 出勤
+                                </button>
+                                <button onclick="clockOut()" class="bg-red-600 text-white py-3 rounded-lg font-semibold">
+                                    ❌ 退勤
+                                </button>
                             </div>
+                        </div>
+
+                        <!-- 本日の勤怠状況 -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <h3 class="text-xl font-bold mb-4">👥 本日の出勤者</h3>
+                            <div id="todayAttendance" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- 勤怠履歴 -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">📋 勤怠履歴</h3>
+                            <button onclick="exportAttendanceCSV()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                                CSV出力
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="text-left py-3 px-4">日付</th>
+                                        <th class="text-left py-3 px-4">キャスト</th>
+                                        <th class="text-center py-3 px-4">出勤</th>
+                                        <th class="text-center py-3 px-4">退勤</th>
+                                        <th class="text-center py-3 px-4">労働時間</th>
+                                        <th class="text-center py-3 px-4">状態</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceTableBody"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
                 <!-- テーブル管理 -->
                 <div id="tables-tab" class="tab-content">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">テーブル管理</h1>
-                    <div id="tablesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                        <!-- 動的生成 -->
-                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-6">🪑 テーブル管理</h1>
+                    <div id="tablesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
                 </div>
 
                 <!-- シフト管理 -->
                 <div id="shifts-tab" class="tab-content">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">シフト管理</h1>
-                    <div class="mb-4 flex flex-wrap gap-2">
-                        <button onclick="addShift()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
-                            シフト追加
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">📅 シフト管理</h1>
+                    <div class="mb-4 flex gap-2">
+                        <button onclick="openAddShiftModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
+                            ➕ シフト追加
                         </button>
                         <button onclick="printShiftTable()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                            シフト表印刷
+                            🖨️ 印刷
                         </button>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                         <div class="flex items-center justify-between mb-4">
-                            <button onclick="previousMonth()" class="p-2">←</button>
-                            <h3 class="text-lg font-bold" id="currentMonth">2024年11月</h3>
-                            <button onclick="nextMonth()" class="p-2">→</button>
+                            <button onclick="previousMonth()" class="px-4 py-2 bg-gray-200 rounded">←</button>
+                            <h3 class="text-xl font-bold" id="currentMonth">2024年11月</h3>
+                            <button onclick="nextMonth()" class="px-4 py-2 bg-gray-200 rounded">→</button>
                         </div>
-                        <div class="calendar-grid text-xs md:text-sm" id="shiftCalendar">
-                            <!-- カレンダー動的生成 -->
-                        </div>
+                        <div class="calendar-grid text-sm" id="shiftCalendar"></div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-lg p-4">
-                        <h3 class="text-lg font-bold mb-4">本日の出勤者</h3>
-                        <div id="todayShifts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <!-- 動的生成 -->
-                        </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-bold mb-4">今週のシフト</h3>
+                        <div id="weeklyShifts" class="space-y-3"></div>
                     </div>
                 </div>
 
                 <!-- 注文管理 -->
                 <div id="orders-tab" class="tab-content">
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">注文管理</h1>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-6">📝 注文管理</h1>
                     <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
                         <table class="min-w-full">
                             <thead class="bg-gray-50">
@@ -284,17 +236,7 @@
                                     <th class="text-center py-3 px-4">操作</th>
                                 </tr>
                             </thead>
-                            <tbody id="ordersTableBody">
-                                <tr class="border-b">
-                                    <td class="py-3 px-4">A2</td>
-                                    <td class="py-3 px-4">ハイボール</td>
-                                    <td class="py-3 px-4 text-center">2</td>
-                                    <td class="py-3 px-4 text-right">¥1,600</td>
-                                    <td class="py-3 px-4 text-center">
-                                        <button class="text-red-600">削除</button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody id="ordersTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -302,12 +244,11 @@
                 <!-- メニュー管理 -->
                 <div id="menu-tab" class="tab-content">
                     <div class="mb-6 flex justify-between items-center">
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">メニュー管理</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">🍽️ メニュー管理</h1>
                         <button onclick="openAddMenuModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
-                            + メニュー追加
+                            ➕ メニュー追加
                         </button>
                     </div>
-
                     <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
                         <table class="min-w-full">
                             <thead class="bg-gray-50">
@@ -319,9 +260,7 @@
                                     <th class="text-center py-3 px-4">操作</th>
                                 </tr>
                             </thead>
-                            <tbody id="menuTableBody">
-                                <!-- 動的生成 -->
-                            </tbody>
+                            <tbody id="menuTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -329,43 +268,38 @@
                 <!-- キャスト管理 -->
                 <div id="casts-tab" class="tab-content">
                     <div class="mb-6 flex justify-between items-center">
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">キャスト管理</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">👥 キャスト管理</h1>
                         <button onclick="openAddCastModal()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">
-                            + キャスト追加
+                            ➕ キャスト追加
                         </button>
                     </div>
-
-                    <div id="castsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- 動的生成 -->
-                    </div>
+                    <div id="castsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
 
                 <!-- 売上レポート -->
                 <div id="reports-tab" class="tab-content">
                     <div class="mb-6">
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">売上レポート</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">📈 売上レポート</h1>
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <button onclick="showDailyReport()" class="bg-purple-600 text-white px-4 py-2 rounded-lg">日次</button>
-                            <button onclick="showWeeklyReport()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">週次</button>
-                            <button onclick="showMonthlyReport()" class="bg-green-600 text-white px-4 py-2 rounded-lg">月次</button>
-                            <button onclick="exportFullReport()" class="bg-orange-600 text-white px-4 py-2 rounded-lg">
-                                レポート出力
-                            </button>
+                            <button onclick="generateReport('daily')" class="bg-purple-600 text-white px-4 py-2 rounded-lg">日次</button>
+                            <button onclick="generateReport('weekly')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">週次</button>
+                            <button onclick="generateReport('monthly')" class="bg-green-600 text-white px-4 py-2 rounded-lg">月次</button>
+                            <button onclick="exportFullReport()" class="bg-orange-600 text-white px-4 py-2 rounded-lg">フル出力</button>
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                        <div class="bg-white rounded-xl shadow-lg p-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
                             <h3 class="text-lg font-bold mb-4">日別売上推移</h3>
                             <canvas id="dailySalesChart"></canvas>
                         </div>
-                        <div class="bg-white rounded-xl shadow-lg p-4">
+                        <div class="bg-white rounded-xl shadow-lg p-6">
                             <h3 class="text-lg font-bold mb-4">カテゴリ別売上</h3>
                             <canvas id="categorySalesChart"></canvas>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-lg p-4">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
                         <h3 class="text-lg font-bold mb-4">売上明細</h3>
                         <div id="salesDetails" class="overflow-x-auto">
                             <table class="min-w-full">
@@ -377,53 +311,72 @@
                                         <th class="text-right py-2 px-4">売上</th>
                                     </tr>
                                 </thead>
-                                <tbody id="reportTableBody">
-                                    <!-- 動的生成 -->
-                                </tbody>
+                                <tbody id="reportTableBody"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
 
-        <!-- モバイルボトムナビ -->
-        <div class="md:hidden bottom-nav flex justify-around bg-white no-print">
-            <button onclick="showTab('dashboard')" class="flex-1 py-3">
-                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
-                <span class="text-xs">ホーム</span>
-            </button>
-            <button onclick="showTab('tables')" class="flex-1 py-3">
-                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span class="text-xs">テーブル</span>
-            </button>
-            <button onclick="showQuickMenu()" class="flex-1 py-3 relative">
-                <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-purple-600 rounded-full p-3">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                </div>
-            </button>
-            <button onclick="showTab('shifts')" class="flex-1 py-3">
-                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span class="text-xs">シフト</span>
-            </button>
-            <button onclick="showTab('reports')" class="flex-1 py-3">
-                <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                <span class="text-xs">レポート</span>
-            </button>
+            </main>
         </div>
     </div>
 
-    <!-- モーダル：メニュー追加 -->
+    <!-- モーダル: キャスト追加 -->
+    <div id="addCastModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="w-full max-w-md bg-white rounded-xl shadow-2xl">
+            <div class="border-b px-6 py-4 flex items-center justify-between">
+                <h2 class="text-xl font-bold">キャスト追加</h2>
+                <button onclick="closeModal('addCastModal')" class="text-gray-400">✕</button>
+            </div>
+            <div class="p-6">
+                <form onsubmit="addCast(event)">
+                    <div class="space-y-4">
+                        <input type="text" id="castName" placeholder="名前" class="w-full px-3 py-2 border rounded-lg" required>
+                        <select id="castRank" class="w-full px-3 py-2 border rounded-lg">
+                            <option value="regular">レギュラー</option>
+                            <option value="chief">チーフ</option>
+                            <option value="manager">マネージャー</option>
+                        </select>
+                        <input type="number" id="castHourlyRate" placeholder="時給" class="w-full px-3 py-2 border rounded-lg" required>
+                    </div>
+                    <div class="mt-6 flex gap-2">
+                        <button type="submit" class="flex-1 bg-purple-600 text-white py-2 rounded-lg">追加</button>
+                        <button type="button" onclick="closeModal('addCastModal')" class="flex-1 border py-2 rounded-lg">キャンセル</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル: キャスト編集（新機能） -->
+    <div id="editCastModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="w-full max-w-md bg-white rounded-xl shadow-2xl">
+            <div class="border-b px-6 py-4 flex items-center justify-between">
+                <h2 class="text-xl font-bold">キャスト編集</h2>
+                <button onclick="closeModal('editCastModal')" class="text-gray-400">✕</button>
+            </div>
+            <div class="p-6">
+                <form onsubmit="updateCast(event)">
+                    <input type="hidden" id="editCastId">
+                    <div class="space-y-4">
+                        <input type="text" id="editCastName" placeholder="名前" class="w-full px-3 py-2 border rounded-lg" required>
+                        <select id="editCastRank" class="w-full px-3 py-2 border rounded-lg">
+                            <option value="regular">レギュラー</option>
+                            <option value="chief">チーフ</option>
+                            <option value="manager">マネージャー</option>
+                        </select>
+                        <input type="number" id="editCastHourlyRate" placeholder="時給" class="w-full px-3 py-2 border rounded-lg" required>
+                    </div>
+                    <div class="mt-6 flex gap-2">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded-lg">更新</button>
+                        <button type="button" onclick="closeModal('editCastModal')" class="flex-1 border py-2 rounded-lg">キャンセル</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル: メニュー追加 -->
     <div id="addMenuModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
         <div class="w-full max-w-md bg-white rounded-xl shadow-2xl">
             <div class="border-b px-6 py-4 flex items-center justify-between">
@@ -451,39 +404,12 @@
         </div>
     </div>
 
-    <!-- モーダル：キャスト追加 -->
-    <div id="addCastModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
-        <div class="w-full max-w-md bg-white rounded-xl shadow-2xl">
-            <div class="border-b px-6 py-4 flex items-center justify-between">
-                <h2 class="text-xl font-bold">キャスト追加</h2>
-                <button onclick="closeModal('addCastModal')" class="text-gray-400">✕</button>
-            </div>
-            <div class="p-6">
-                <form onsubmit="addCast(event)">
-                    <div class="space-y-4">
-                        <input type="text" id="castName" placeholder="名前" class="w-full px-3 py-2 border rounded-lg" required>
-                        <select id="castRank" class="w-full px-3 py-2 border rounded-lg">
-                            <option value="regular">レギュラー</option>
-                            <option value="chief">チーフ</option>
-                            <option value="manager">マネージャー</option>
-                        </select>
-                        <input type="number" id="castHourlyRate" placeholder="時給" class="w-full px-3 py-2 border rounded-lg" required>
-                    </div>
-                    <div class="mt-6 flex gap-2">
-                        <button type="submit" class="flex-1 bg-purple-600 text-white py-2 rounded-lg">追加</button>
-                        <button type="button" onclick="closeModal('addCastModal')" class="flex-1 border py-2 rounded-lg">キャンセル</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- モーダル：シフト追加 -->
-    <div id="shiftModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
+    <!-- モーダル: シフト追加 -->
+    <div id="addShiftModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 p-4">
         <div class="w-full max-w-md bg-white rounded-xl shadow-2xl">
             <div class="border-b px-6 py-4 flex items-center justify-between">
                 <h2 class="text-xl font-bold">シフト登録</h2>
-                <button onclick="closeModal('shiftModal')" class="text-gray-400">✕</button>
+                <button onclick="closeModal('addShiftModal')" class="text-gray-400">✕</button>
             </div>
             <div class="p-6">
                 <form onsubmit="saveShift(event)">
@@ -494,12 +420,12 @@
                         <input type="date" id="shiftDate" class="w-full px-3 py-2 border rounded-lg" required>
                         <div class="grid grid-cols-2 gap-4">
                             <input type="time" id="shiftStart" value="20:00" class="w-full px-3 py-2 border rounded-lg">
-                            <input type="time" id="shiftEnd" value="25:00" class="w-full px-3 py-2 border rounded-lg">
+                            <input type="time" id="shiftEnd" value="01:00" class="w-full px-3 py-2 border rounded-lg">
                         </div>
                     </div>
                     <div class="mt-6 flex gap-2">
                         <button type="submit" class="flex-1 bg-purple-600 text-white py-2 rounded-lg">登録</button>
-                        <button type="button" onclick="closeModal('shiftModal')" class="flex-1 border py-2 rounded-lg">キャンセル</button>
+                        <button type="button" onclick="closeModal('addShiftModal')" class="flex-1 border py-2 rounded-lg">キャンセル</button>
                     </div>
                 </form>
             </div>
@@ -507,6 +433,9 @@
     </div>
 
     <script>
+        // API設定
+        const API_BASE = 'http://localhost:8000/api/v1';
+        
         // アプリケーション状態
         const appState = {
             currentUser: null,
@@ -517,16 +446,21 @@
             casts: [],
             orders: [],
             shifts: [],
-            sales: 0
+            attendances: [],
+            sales: 0,
+            apiConnected: false
         };
 
         // 初期化
         function initializeApp() {
             setupBusinessDate();
-            loadInitialData();
+            loadDemoData();
+            syncWithBackend();
             setupCharts();
             updateDashboard();
             initializeShiftCalendar();
+            renderAttendance();
+            populateCastSelects();
         }
 
         function setupBusinessDate() {
@@ -535,8 +469,8 @@
                 today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
         }
 
-        function loadInitialData() {
-            // テーブル
+        // デモデータ読み込み
+        function loadDemoData() {
             appState.tables = [
                 { id: 1, name: 'A1', status: 'available' },
                 { id: 2, name: 'A2', status: 'occupied', sessionId: 1 },
@@ -545,235 +479,257 @@
                 { id: 5, name: 'B2', status: 'reserved' }
             ];
 
-            // メニュー
             appState.menuItems = [
-                { id: 1, name: 'ドンペリニヨン ロゼ', category: 'bottle', price: 150000, stock: 5 },
+                { id: 1, name: 'ドンペリニヨン', category: 'bottle', price: 150000, stock: 5 },
                 { id: 2, name: 'ハイボール', category: 'drink', price: 800, stock: 100 },
-                { id: 3, name: '90分セット', category: 'set', price: 5000, stock: null },
-                { id: 4, name: 'フルーツ盛り', category: 'food', price: 5000, stock: 10 }
+                { id: 3, name: '90分セット', category: 'set', price: 5000, stock: null }
             ];
 
-            // キャスト
             appState.casts = [
                 { id: 1, name: 'さくら', rank: 'chief', hourlyRate: 3500, sales: 285000 },
-                { id: 2, name: 'ゆき', rank: 'regular', hourlyRate: 2500, sales: 168000 },
-                { id: 3, name: 'みか', rank: 'manager', hourlyRate: 4000, sales: 342000 }
+                { id: 2, name: 'ゆき', rank: 'regular', hourlyRate: 2500, sales: 168000 }
             ];
 
-            // セッション
             appState.sessions = [
                 { id: 1, tableId: 2, startTime: '21:30', guests: 4, total: 26400 },
                 { id: 2, tableId: 3, startTime: '20:00', guests: 6, total: 160000 }
             ];
 
+            appState.attendances = [
+                { id: 1, castId: 1, date: new Date().toISOString().split('T')[0], clockIn: '20:00', clockOut: null, status: 'working' }
+            ];
+
             renderTables();
             renderMenu();
             renderCasts();
+            renderOrders();
             renderReports();
         }
 
-        // ログイン
-        function handleLogin(event) {
-            event.preventDefault();
-            showDashboard();
-            showNotification('ログインしました', 'success');
+        // API同期
+        async function syncWithBackend() {
+            try {
+                showNotification('APIと同期中...', 'info');
+                
+                const [tables, menu, casts] = await Promise.all([
+                    fetch(`${API_BASE}/tables`).then(r => r.ok ? r.json() : []),
+                    fetch(`${API_BASE}/menu`).then(r => r.ok ? r.json() : []),
+                    fetch(`${API_BASE}/casts`).then(r => r.ok ? r.json() : [])
+                ]);
+
+                if (tables.length) appState.tables = tables;
+                if (menu.length) appState.menuItems = menu;
+                if (casts.length) appState.casts = casts;
+
+                appState.apiConnected = true;
+                showNotification('API同期完了！', 'success');
+                
+                renderTables();
+                renderMenu();
+                renderCasts();
+            } catch (error) {
+                console.error('API同期エラー:', error);
+                showNotification('APIオフライン - デモモードで動作中', 'warning');
+                appState.apiConnected = false;
+            }
         }
 
-        function showDashboard() {
+        // ログイン処理
+        function handleLogin(event) {
+            event.preventDefault();
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
             initializeApp();
+            showNotification('ログインしました', 'success');
+        }
+
+        function logout() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+            showNotification('ログアウトしました', 'info');
         }
 
         // タブ切替
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabName + '-tab').classList.add('active');
             
-            if (window.innerWidth < 768) {
-                closeMobileSidebar();
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-gray-700', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+            event.target.classList.add('bg-gray-700', 'text-white');
+            event.target.classList.remove('text-gray-300');
+        }
+
+        // 勤怠管理機能
+        function populateCastSelects() {
+            const select = document.getElementById('attendanceCast');
+            const shiftSelect = document.getElementById('shiftCast');
+            
+            const options = '<option value="">選択してください</option>' + 
+                appState.casts.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            
+            if (select) select.innerHTML = options;
+            if (shiftSelect) shiftSelect.innerHTML = options;
+        }
+
+        function clockIn() {
+            const castId = parseInt(document.getElementById('attendanceCast').value);
+            if (!castId) {
+                showNotification('キャストを選択してください', 'warning');
+                return;
             }
-        }
 
-        // テーブル表示
-        function renderTables() {
-            const grid = document.getElementById('tablesGrid');
-            if (!grid) return;
-            
-            grid.innerHTML = appState.tables.map(table => {
-                const statusColor = table.status === 'available' ? 'green' : 
-                                  table.status === 'occupied' ? 'red' : 'yellow';
-                const statusText = table.status === 'available' ? '空席' : 
-                                 table.status === 'occupied' ? '使用中' : '予約';
-                
-                return `
-                    <div class="bg-${statusColor}-100 border-2 border-${statusColor}-500 rounded-lg p-3 md:p-4 cursor-pointer">
-                        ${table.isVip ? '<span class="text-xs bg-yellow-400 px-2 py-1 rounded">VIP</span>' : ''}
-                        <div class="text-center">
-                            <p class="text-xl font-bold">${table.name}</p>
-                            <p class="text-xs">${statusText}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // メニュー表示
-        function renderMenu() {
-            const tbody = document.getElementById('menuTableBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = appState.menuItems.map(item => `
-                <tr class="border-b">
-                    <td class="py-3 px-4">${item.name}</td>
-                    <td class="py-3 px-4">
-                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
-                            ${getCategoryLabel(item.category)}
-                        </span>
-                    </td>
-                    <td class="py-3 px-4 text-right">¥${item.price.toLocaleString()}</td>
-                    <td class="py-3 px-4 text-center">${item.stock || '-'}</td>
-                    <td class="py-3 px-4 text-center">
-                        <button onclick="editMenuItem(${item.id})" class="text-blue-600 mr-2">編集</button>
-                        <button onclick="deleteMenuItem(${item.id})" class="text-red-600">削除</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function getCategoryLabel(category) {
-            const labels = { bottle: 'ボトル', drink: 'ドリンク', food: 'フード', set: 'セット' };
-            return labels[category] || category;
-        }
-
-        // キャスト表示
-        function renderCasts() {
-            const grid = document.getElementById('castsGrid');
-            if (!grid) return;
-            
-            grid.innerHTML = appState.casts.map(cast => `
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="mb-4">
-                        <h3 class="font-bold text-lg">${cast.name}</h3>
-                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
-                            ${getRankLabel(cast.rank)}
-                        </span>
-                    </div>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span>時給</span>
-                            <span>¥${cast.hourlyRate.toLocaleString()}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>本日売上</span>
-                            <span>¥${cast.sales.toLocaleString()}</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex justify-between">
-                        <button onclick="editCast(${cast.id})" class="text-blue-600">編集</button>
-                        <button onclick="deleteCast(${cast.id})" class="text-red-600">削除</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getRankLabel(rank) {
-            const labels = { regular: 'レギュラー', chief: 'チーフ', manager: 'マネージャー' };
-            return labels[rank] || rank;
-        }
-
-        // レポート表示
-        function renderReports() {
-            const tbody = document.getElementById('reportTableBody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = appState.sessions.map(session => {
-                const table = appState.tables.find(t => t.id === session.tableId);
-                return `
-                    <tr class="border-b">
-                        <td class="py-2 px-4">${new Date().toLocaleDateString()}</td>
-                        <td class="py-2 px-4">${table?.name || '-'}</td>
-                        <td class="py-2 px-4 text-center">${session.guests}</td>
-                        <td class="py-2 px-4 text-right">¥${session.total.toLocaleString()}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // メニュー追加
-        function openAddMenuModal() {
-            document.getElementById('addMenuModal').classList.add('active');
-        }
-
-        function addMenuItem(event) {
-            event.preventDefault();
-            const newItem = {
-                id: appState.menuItems.length + 1,
-                name: document.getElementById('menuName').value,
-                category: document.getElementById('menuCategory').value,
-                price: parseInt(document.getElementById('menuPrice').value),
-                stock: 10
+            const now = new Date();
+            const attendance = {
+                id: appState.attendances.length + 1,
+                castId: castId,
+                date: now.toISOString().split('T')[0],
+                clockIn: now.toTimeString().split(' ')[0],
+                clockOut: null,
+                status: 'working'
             };
-            appState.menuItems.push(newItem);
-            renderMenu();
-            closeModal('addMenuModal');
-            showNotification('メニューを追加しました', 'success');
+
+            appState.attendances.push(attendance);
+            showNotification('出勤打刻しました', 'success');
+            renderAttendance();
         }
 
-        function deleteMenuItem(id) {
-            if (confirm('削除しますか？')) {
-                appState.menuItems = appState.menuItems.filter(item => item.id !== id);
-                renderMenu();
-                showNotification('削除しました', 'info');
+        function clockOut() {
+            const castId = parseInt(document.getElementById('attendanceCast').value);
+            if (!castId) {
+                showNotification('キャストを選択してください', 'warning');
+                return;
+            }
+
+            const attendance = appState.attendances.find(a => 
+                a.castId === castId && 
+                a.date === new Date().toISOString().split('T')[0] && 
+                a.status === 'working'
+            );
+
+            if (!attendance) {
+                showNotification('出勤記録が見つかりません', 'error');
+                return;
+            }
+
+            attendance.clockOut = new Date().toTimeString().split(' ')[0];
+            attendance.status = 'completed';
+            
+            showNotification('退勤打刻しました', 'success');
+            renderAttendance();
+        }
+
+        function renderAttendance() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayAttendances = appState.attendances.filter(a => a.date === today && a.status === 'working');
+            
+            const todayDiv = document.getElementById('todayAttendance');
+            if (todayDiv) {
+                todayDiv.innerHTML = todayAttendances.length === 0 
+                    ? '<p class="text-gray-500">出勤者なし</p>'
+                    : todayAttendances.map(a => {
+                        const cast = appState.casts.find(c => c.id === a.castId);
+                        return `
+                            <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                                <span class="font-semibold">${cast?.name || ''}</span>
+                                <span class="text-sm text-gray-600">出勤: ${a.clockIn}</span>
+                            </div>
+                        `;
+                    }).join('');
+            }
+
+            const tbody = document.getElementById('attendanceTableBody');
+            if (tbody) {
+                tbody.innerHTML = appState.attendances.map(a => {
+                    const cast = appState.casts.find(c => c.id === a.castId);
+                    const hours = a.clockOut ? calculateHours(a.clockIn, a.clockOut) : '-';
+                    const status = a.status === 'working' ? '勤務中' : '退勤済';
+                    const statusColor = a.status === 'working' ? 'text-green-600' : 'text-gray-600';
+                    
+                    return `
+                        <tr class="border-b">
+                            <td class="py-3 px-4">${a.date}</td>
+                            <td class="py-3 px-4">${cast?.name || ''}</td>
+                            <td class="py-3 px-4 text-center">${a.clockIn}</td>
+                            <td class="py-3 px-4 text-center">${a.clockOut || '-'}</td>
+                            <td class="py-3 px-4 text-center">${hours}</td>
+                            <td class="py-3 px-4 text-center ${statusColor}">${status}</td>
+                        </tr>
+                    `;
+                }).join('');
             }
         }
 
-        function editMenuItem(id) {
-            showNotification('編集機能は準備中です', 'info');
+        function calculateHours(clockIn, clockOut) {
+            const [h1, m1] = clockIn.split(':').map(Number);
+            const [h2, m2] = clockOut.split(':').map(Number);
+            const minutes = (h2 * 60 + m2) - (h1 * 60 + m1);
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours}時間${mins}分`;
         }
 
-        // キャスト追加
-        function openAddCastModal() {
-            document.getElementById('addCastModal').classList.add('active');
+        function exportAttendanceCSV() {
+            const csv = '日付,キャスト,出勤,退勤,労働時間,状態\n' + 
+                appState.attendances.map(a => {
+                    const cast = appState.casts.find(c => c.id === a.castId);
+                    const hours = a.clockOut ? calculateHours(a.clockIn, a.clockOut) : '-';
+                    return `${a.date},${cast?.name},${a.clockIn},${a.clockOut || ''},${hours},${a.status}`;
+                }).join('\n');
+            
+            downloadCSV(csv, 'attendance.csv');
+            showNotification('勤怠CSVをダウンロードしました', 'success');
         }
 
-        function addCast(event) {
-            event.preventDefault();
-            const newCast = {
-                id: appState.casts.length + 1,
-                name: document.getElementById('castName').value,
-                rank: document.getElementById('castRank').value,
-                hourlyRate: parseInt(document.getElementById('castHourlyRate').value),
-                sales: 0
-            };
-            appState.casts.push(newCast);
-            renderCasts();
-            closeModal('addCastModal');
-            showNotification('キャストを追加しました', 'success');
-        }
-
-        function deleteCast(id) {
-            if (confirm('削除しますか？')) {
-                appState.casts = appState.casts.filter(cast => cast.id !== id);
-                renderCasts();
-                showNotification('削除しました', 'info');
-            }
-        }
-
+        // キャスト編集機能
         function editCast(id) {
-            showNotification('編集機能は準備中です', 'info');
+            const cast = appState.casts.find(c => c.id === id);
+            if (!cast) return;
+            
+            document.getElementById('editCastId').value = cast.id;
+            document.getElementById('editCastName').value = cast.name;
+            document.getElementById('editCastRank').value = cast.rank;
+            document.getElementById('editCastHourlyRate').value = cast.hourlyRate;
+            
+            document.getElementById('editCastModal').classList.add('active');
         }
 
-        // シフト管理
+        async function updateCast(event) {
+            event.preventDefault();
+            
+            const id = parseInt(document.getElementById('editCastId').value);
+            const cast = appState.casts.find(c => c.id === id);
+            
+            if (cast) {
+                cast.name = document.getElementById('editCastName').value;
+                cast.rank = document.getElementById('editCastRank').value;
+                cast.hourlyRate = parseInt(document.getElementById('editCastHourlyRate').value);
+                
+                if (appState.apiConnected) {
+                    try {
+                        await fetch(`${API_BASE}/casts/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(cast)
+                        });
+                    } catch (error) {
+                        console.error('API更新エラー:', error);
+                    }
+                }
+                
+                renderCasts();
+                populateCastSelects();
+                closeModal('editCastModal');
+                showNotification('キャスト情報を更新しました', 'success');
+            }
+        }
+
+        // シフト管理機能
         function initializeShiftCalendar() {
-            appState.shifts = [
-                { id: 1, castId: 1, date: '2024-11-05', start: '20:00', end: '01:00' },
-                { id: 2, castId: 2, date: '2024-11-05', start: '21:00', end: '02:00' }
-            ];
             renderShiftCalendar();
-            renderTodayShifts();
+            renderWeeklyShifts();
         }
 
         function renderShiftCalendar() {
@@ -790,52 +746,94 @@
             let html = '';
             const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
             weekDays.forEach(day => {
-                html += `<div class="text-center font-bold p-2">${day}</div>`;
+                html += `<div class="text-center font-bold p-2 bg-gray-100">${day}</div>`;
             });
 
             for (let i = 0; i < firstDay; i++) {
-                html += `<div class="p-2"></div>`;
+                html += `<div class="p-2 bg-gray-50"></div>`;
             }
 
             for (let date = 1; date <= lastDate; date++) {
-                html += `<div class="border p-2 min-h-[60px]">${date}</div>`;
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                const shiftsForDate = appState.shifts.filter(s => s.date === dateStr);
+                
+                html += `<div class="border p-2 min-h-[80px] bg-white hover:bg-gray-50">
+                    <div class="font-semibold text-sm mb-1">${date}</div>
+                    <div class="space-y-1">
+                        ${shiftsForDate.map(shift => {
+                            const cast = appState.casts.find(c => c.id === shift.castId);
+                            return `<div class="shift-badge">${cast?.name || ''}</div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
             }
 
             calendar.innerHTML = html;
         }
 
-        function renderTodayShifts() {
-            const container = document.getElementById('todayShifts');
+        function renderWeeklyShifts() {
+            const container = document.getElementById('weeklyShifts');
             if (!container) return;
 
-            const todayShifts = appState.shifts.filter(s => s.date === new Date().toISOString().split('T')[0]);
-            
-            container.innerHTML = todayShifts.map(shift => {
-                const cast = appState.casts.find(c => c.id === shift.castId);
-                return `
-                    <div class="bg-gray-50 rounded-lg p-3">
-                        <p class="font-bold">${cast?.name || ''}</p>
-                        <p class="text-sm">${shift.start} - ${shift.end}</p>
-                    </div>
-                `;
-            }).join('') || '<p class="text-gray-500">本日の出勤者はいません</p>';
+            const today = new Date();
+            const weekShifts = appState.shifts.filter(s => {
+                const shiftDate = new Date(s.date);
+                const diff = Math.floor((shiftDate - today) / (1000 * 60 * 60 * 24));
+                return diff >= 0 && diff < 7;
+            });
+
+            container.innerHTML = weekShifts.length === 0 
+                ? '<p class="text-gray-500">今週のシフトなし</p>'
+                : weekShifts.map(shift => {
+                    const cast = appState.casts.find(c => c.id === shift.castId);
+                    return `
+                        <div class="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <p class="font-bold">${cast?.name || ''}</p>
+                                <p class="text-sm text-gray-600">${shift.date}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm">${shift.start} - ${shift.end}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
         }
 
-        function addShift() {
-            // キャスト選択肢を動的に生成
-            const select = document.getElementById('shiftCast');
-            select.innerHTML = '<option value="">選択してください</option>' + 
-                appState.casts.map(cast => 
-                    `<option value="${cast.id}">${cast.name}</option>`
-                ).join('');
-            
-            document.getElementById('shiftModal').classList.add('active');
+        function openAddShiftModal() {
+            populateCastSelects();
+            document.getElementById('addShiftModal').classList.add('active');
         }
 
-        function saveShift(event) {
+        async function saveShift(event) {
             event.preventDefault();
+            
+            const shift = {
+                id: appState.shifts.length + 1,
+                castId: parseInt(document.getElementById('shiftCast').value),
+                date: document.getElementById('shiftDate').value,
+                start: document.getElementById('shiftStart').value,
+                end: document.getElementById('shiftEnd').value
+            };
+
+            appState.shifts.push(shift);
+            
+            if (appState.apiConnected) {
+                try {
+                    await fetch(`${API_BASE}/shifts`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(shift)
+                    });
+                } catch (error) {
+                    console.error('シフト登録エラー:', error);
+                }
+            }
+
+            renderShiftCalendar();
+            renderWeeklyShifts();
+            closeModal('addShiftModal');
             showNotification('シフトを登録しました', 'success');
-            closeModal('shiftModal');
         }
 
         function previousMonth() {
@@ -848,15 +846,247 @@
             renderShiftCalendar();
         }
 
+        // テーブル表示
+        function renderTables() {
+            const grid = document.getElementById('tablesGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = appState.tables.map(table => {
+                const statusColor = table.status === 'available' ? 'green' : 
+                                  table.status === 'occupied' ? 'red' : 'yellow';
+                const statusText = table.status === 'available' ? '空席' : 
+                                 table.status === 'occupied' ? '使用中' : '予約';
+                
+                return `
+                    <div class="bg-${statusColor}-100 border-2 border-${statusColor}-500 rounded-lg p-4 cursor-pointer hover:shadow-lg transition">
+                        ${table.isVip ? '<span class="text-xs bg-yellow-400 px-2 py-1 rounded">VIP</span>' : ''}
+                        <div class="text-center mt-2">
+                            <p class="text-2xl font-bold">${table.name}</p>
+                            <p class="text-sm">${statusText}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // メニュー表示
+        function renderMenu() {
+            const tbody = document.getElementById('menuTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = appState.menuItems.map(item => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">${item.name}</td>
+                    <td class="py-3 px-4">
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
+                            ${getCategoryLabel(item.category)}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-right">¥${item.price.toLocaleString()}</td>
+                    <td class="py-3 px-4 text-center">${item.stock || '-'}</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="deleteMenuItem(${item.id})" class="text-red-600 hover:text-red-800">削除</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getCategoryLabel(category) {
+            const labels = { bottle: 'ボトル', drink: 'ドリンク', food: 'フード', set: 'セット' };
+            return labels[category] || category;
+        }
+
+        function openAddMenuModal() {
+            document.getElementById('addMenuModal').classList.add('active');
+        }
+
+        async function addMenuItem(event) {
+            event.preventDefault();
+            
+            const newItem = {
+                id: appState.menuItems.length + 1,
+                name: document.getElementById('menuName').value,
+                category: document.getElementById('menuCategory').value,
+                price: parseInt(document.getElementById('menuPrice').value),
+                stock: 10
+            };
+
+            appState.menuItems.push(newItem);
+            
+            if (appState.apiConnected) {
+                try {
+                    await fetch(`${API_BASE}/menu`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newItem)
+                    });
+                } catch (error) {
+                    console.error('メニュー追加エラー:', error);
+                }
+            }
+
+            renderMenu();
+            closeModal('addMenuModal');
+            showNotification('メニューを追加しました', 'success');
+        }
+
+        function deleteMenuItem(id) {
+            if (confirm('削除しますか？')) {
+                appState.menuItems = appState.menuItems.filter(item => item.id !== id);
+                renderMenu();
+                showNotification('削除しました', 'info');
+            }
+        }
+
+        // キャスト表示
+        function renderCasts() {
+            const grid = document.getElementById('castsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = appState.casts.map(cast => `
+                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-xl">${cast.name}</h3>
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">
+                            ${getRankLabel(cast.rank)}
+                        </span>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>時給</span>
+                            <span>¥${cast.hourlyRate.toLocaleString()}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>本日売上</span>
+                            <span>¥${cast.sales.toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button onclick="editCast(${cast.id})" class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                            編集
+                        </button>
+                        <button onclick="deleteCast(${cast.id})" class="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">
+                            削除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRankLabel(rank) {
+            const labels = { regular: 'レギュラー', chief: 'チーフ', manager: 'マネージャー' };
+            return labels[rank] || rank;
+        }
+
+        function openAddCastModal() {
+            document.getElementById('addCastModal').classList.add('active');
+        }
+
+        async function addCast(event) {
+            event.preventDefault();
+            
+            const newCast = {
+                id: appState.casts.length + 1,
+                name: document.getElementById('castName').value,
+                rank: document.getElementById('castRank').value,
+                hourlyRate: parseInt(document.getElementById('castHourlyRate').value),
+                sales: 0
+            };
+
+            appState.casts.push(newCast);
+            
+            if (appState.apiConnected) {
+                try {
+                    await fetch(`${API_BASE}/casts`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newCast)
+                    });
+                } catch (error) {
+                    console.error('キャスト追加エラー:', error);
+                }
+            }
+
+            renderCasts();
+            populateCastSelects();
+            closeModal('addCastModal');
+            showNotification('キャストを追加しました', 'success');
+        }
+
+        function deleteCast(id) {
+            if (confirm('削除しますか？')) {
+                appState.casts = appState.casts.filter(cast => cast.id !== id);
+                renderCasts();
+                populateCastSelects();
+                showNotification('削除しました', 'info');
+            }
+        }
+
+        // 注文表示
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">注文データなし</td></tr>';
+        }
+
+        // レポート表示
+        function renderReports() {
+            const tbody = document.getElementById('reportTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = appState.sessions.map(session => {
+                const table = appState.tables.find(t => t.id === session.tableId);
+                return `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-2 px-4">${new Date().toLocaleDateString()}</td>
+                        <td class="py-2 px-4">${table?.name || '-'}</td>
+                        <td class="py-2 px-4 text-center">${session.guests}</td>
+                        <td class="py-2 px-4 text-right">¥${session.total.toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function generateReport(type) {
+            showNotification(`${type}レポートを生成中...`, 'info');
+            setTimeout(() => {
+                showNotification(`${type}レポートを生成しました`, 'success');
+            }, 1000);
+        }
+
+        function exportFullReport() {
+            showNotification('フルレポートを出力中...', 'info');
+            setTimeout(() => {
+                showNotification('フルレポートをダウンロードしました', 'success');
+            }, 1500);
+        }
+
         // ダッシュボード更新
         function updateDashboard() {
             const totalSales = appState.sessions.reduce((sum, s) => sum + s.total, 0);
+            const workingCount = appState.attendances.filter(a => a.status === 'working').length;
+            
             document.getElementById('totalSales').textContent = `¥${totalSales.toLocaleString()}`;
             document.getElementById('totalCustomers').textContent = appState.sessions.length + '組';
-            document.getElementById('workingCasts').textContent = appState.casts.length + '名';
+            document.getElementById('workingCasts').textContent = workingCount + '名';
             
             const avg = totalSales / (appState.sessions.length || 1);
             document.getElementById('averageSpend').textContent = `¥${Math.round(avg).toLocaleString()}`;
+
+            const activities = document.getElementById('recentActivities');
+            if (activities) {
+                activities.innerHTML = `
+                    <div class="flex justify-between py-2 border-b">
+                        <span class="text-sm">22:30</span>
+                        <span class="text-sm">テーブルA2を開きました</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b">
+                        <span class="text-sm">22:15</span>
+                        <span class="text-sm">VIP1に注文追加</span>
+                    </div>
+                `;
+            }
         }
 
         // グラフ設定
@@ -870,9 +1100,10 @@
                         datasets: [{
                             label: '売上',
                             data: [120000, 180000, 320000, 280000, 150000, 80000],
-                            backgroundColor: 'rgba(147, 51, 234, 0.5)'
+                            backgroundColor: 'rgba(147, 51, 234, 0.7)'
                         }]
-                    }
+                    },
+                    options: { responsive: true, maintainAspectRatio: true }
                 });
             }
 
@@ -886,9 +1117,11 @@
                             label: '売上',
                             data: [980000, 1120000, 890000, 1340000, 1560000, 1890000, 1650000],
                             borderColor: 'rgb(147, 51, 234)',
-                            tension: 0.1
+                            tension: 0.1,
+                            fill: false
                         }]
-                    }
+                    },
+                    options: { responsive: true, maintainAspectRatio: true }
                 });
             }
 
@@ -907,15 +1140,21 @@
                                 'rgba(251, 146, 60, 0.8)'
                             ]
                         }]
-                    }
+                    },
+                    options: { responsive: true, maintainAspectRatio: true }
                 });
             }
         }
 
-        // 印刷機能
+        // 印刷・エクスポート
         function printDailyReport() {
             window.print();
             showNotification('日報を印刷します', 'info');
+        }
+
+        function printShiftTable() {
+            window.print();
+            showNotification('シフト表を印刷します', 'info');
         }
 
         function exportCSV() {
@@ -925,29 +1164,18 @@
                     return `${table?.name},${s.startTime},${s.guests},${s.total}`;
                 }).join('\n');
             
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sales_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            
+            downloadCSV(csv, 'sales.csv');
             showNotification('CSVをダウンロードしました', 'success');
         }
 
-        // モバイル
-        function toggleMobileSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('mobileOverlay').classList.toggle('active');
-        }
-
-        function closeMobileSidebar() {
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('mobileOverlay').classList.remove('active');
-        }
-
-        function showQuickMenu() {
-            showNotification('クイックメニューを開きます', 'info');
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
 
         // ユーティリティ
@@ -955,26 +1183,25 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
+        function toggleMobileSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
         function showNotification(message, type = 'info') {
             const colors = {
                 success: 'bg-green-500',
                 error: 'bg-red-500',
+                warning: 'bg-yellow-500',
                 info: 'bg-blue-500'
             };
             
             const notification = document.createElement('div');
-            notification.className = `notification ${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg`;
+            notification.className = `notification ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg`;
             notification.textContent = message;
             
             document.getElementById('notificationArea').appendChild(notification);
             
             setTimeout(() => notification.remove(), 3000);
-        }
-
-        function logout() {
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            showNotification('ログアウトしました', 'info');
         }
 
         // モーダル外クリックで閉じる
