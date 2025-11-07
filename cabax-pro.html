@@ -218,6 +218,12 @@
         .status-occupied { background: #ef4444; }
         .status-reserved { background: #f59e0b; }
         
+        .table-name {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
         scrollbar-width: thin;
         scrollbar-color: rgba(212, 175, 55, 0.3) rgba(26, 26, 26, 0.3);
         
@@ -915,7 +921,7 @@
             }
         }
 
-        // テーブル表示
+        // テーブル表示（修正版 - undefined問題を解決）
         function renderTables() {
             const grid = document.getElementById('tablesGrid');
             if (!grid) return;
@@ -943,7 +949,7 @@
                     <div class="luxury-card ${statusClass} rounded-2xl p-6 cursor-pointer hover:shadow-2xl transition-all">
                         ${table.isVip ? '<div class="text-xs gold-accent font-bold mb-2">⭐ VIP</div>' : ''}
                         <div class="text-center">
-                            <p class="text-3xl font-bold text-gray-200 mb-2">${table.name}</p>
+                            <p class="table-name text-gray-200 mb-2">${table.name || 'テーブル'}</p>
                             <div class="flex items-center justify-center">
                                 <span class="status-dot ${statusDot}"></span>
                                 <span class="text-sm text-gray-400">${statusText}</span>
@@ -1126,6 +1132,7 @@
             appState.attendances.push(attendance);
             showNotification('出勤打刻しました', 'success');
             renderAttendance();
+            updateDashboard();
         }
 
         function clockOut() {
@@ -1151,6 +1158,7 @@
             
             showNotification('退勤打刻しました', 'success');
             renderAttendance();
+            updateDashboard();
         }
 
         function renderAttendance() {
@@ -1375,17 +1383,17 @@
             }, 1500);
         }
 
-        // ダッシュボード更新
+        // ダッシュボード更新（修正版 - 金額表示を確実に）
         function updateDashboard() {
             const totalSales = appState.sessions.reduce((sum, s) => sum + s.total, 0);
             const workingCount = appState.attendances.filter(a => a.status === 'working').length;
             
             document.getElementById('totalSales').textContent = `¥${totalSales.toLocaleString()}`;
-            document.getElementById('totalCustomers').textContent = appState.sessions.length + '組';
-            document.getElementById('workingCasts').textContent = workingCount + '名';
+            document.getElementById('totalCustomers').textContent = `${appState.sessions.length}組`;
+            document.getElementById('workingCasts').textContent = `${workingCount}名`;
             
-            const avg = totalSales / (appState.sessions.length || 1);
-            document.getElementById('averageSpend').textContent = `¥${Math.round(avg).toLocaleString()}`;
+            const avg = Math.round(totalSales / (appState.sessions.length || 1));
+            document.getElementById('averageSpend').textContent = `¥${avg.toLocaleString()}`;
 
             const activities = document.getElementById('recentActivities');
             if (activities) {
