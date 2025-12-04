@@ -502,11 +502,11 @@ def startup_event():
     # スタッフ
     if db.query(Staff).count() == 0:
         staff_members = [
-            Staff(name="田中", role="manager", hourly_rate=1500),
-            Staff(name="山田", role="waiter", hourly_rate=1200),
-            Staff(name="佐藤", role="waiter", hourly_rate=1200),
-            Staff(name="鈴木", role="kitchen", hourly_rate=1100),
-            Staff(name="高橋", role="catch", hourly_rate=1000),
+            Staff(name="田中", role="manager", salary_amount=1500),
+            Staff(name="山田", role="waiter", salary_amount=1200),
+            Staff(name="佐藤", role="waiter", salary_amount=1200),
+            Staff(name="鈴木", role="kitchen", salary_amount=1100),
+            Staff(name="高橋", role="catch", salary_amount=1000),
         ]
         db.add_all(staff_members)
         db.commit()
